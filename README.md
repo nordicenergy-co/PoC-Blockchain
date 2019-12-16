@@ -1,5 +1,5 @@
 
-# CoE-Blockchain
+# PoC-Blockchain
 
 #### The Proof-of-Concept for Energy Trading in DC Microgrids using Blockchain Technology.
 
