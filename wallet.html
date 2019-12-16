@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PoC-Blockchain</title>
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+  <link href="css/font-awesome.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <div id="loading"><span class="loading_img"></span></div>
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#defaultNavbar1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+        <a class="navbar-brand" href="#"><img src="public/images/logo.png" alt="Green Blocks" width="180" height="38"></a></div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="defaultNavbar1">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#" class="btn btn-success" data-toggle="modal" data-target="#transactions">ETHER TRANSACTIONS</a></li>
+          <li><a href="#">Home</a></li>
+          <li><a href="http://192.168.43.50:4000">Dashboard</a></li>
+          <li><a href="http://localhost:3000">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <h2>Wallet</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 col-xs-12">
+          <div class="card">
+            <h3 id="my_Etokens"></h3>
+            <p>Energy tokens</p>
+          </div>
+        </div>
+        <div class="col-md-4 col-xs-12">
+          <div class="card">
+            <h3 id="current_generation"></h3>
+            <p>Current Generation</p>
+          </div>
+        </div>
+        <div class="col-md-4 col-xs-12">
+          <div class="card">
+            <h3 id="ether_balance"></h3>
+            <p>Account Balance</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="sub-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-4">
+          <h2 class="alt-h2">Pending Transactions</h2>
+        </div>
+        <div class="col-xs-8 text-right">
+          <button class="btn btn-secondary" onclick="startmine()">Start Mining</button> &nbsp;&nbsp; <button class="btn btn-primary" onclick="stopmine()">Stop Mining</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>TX Number</th>
+                  <th>Transaction Hash</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td id="trans_hash1"></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td id="trans_hash2"></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td id="trans_hash3"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Modal -->
+  <div id="transactions" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">×</button>
+          <h4 class="modal-title">Ethereum Transactions</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="To Account" id="To_address">
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Ether Amount" id="Value">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal" onclick="basic_tx();">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="js/jquery-1.11.3.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/bootstrap.js"></script>
+  <script src="js/script.js"></script>
+  <script src="./after.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/node_modules/web3/dist/web3.min.js"></script>
+  <script>
+    var kWh;
+    var tokens;
+    var balance = "";
+    var socket = io();
+
+    function startmine() {
+      socket.emit('startmine', 'awadhut');
+    }
+
+    function stopmine() {
+      socket.emit('stopmine', 'awadhut');
+    }
+    setInterval(function() {
+      console.log("ashish");
+      document.getElementById("current_generation").innerHTML = kWh;
+      document.getElementById("my_Etokens").innerHTML = Etokens;
+      document.getElementById("ether_balance").innerHTML = ether_balance;
+    }, 1000);
+    socket.on('list', function(data) {
+      var tx_1 = data.tx_1;
+      var tx_2 = data.tx_2;
+      var tx_3 = data.tx_3;
+      document.getElementById("trans_hash1").innerHTML = tx_1;
+      document.getElementById("trans_hash2").innerHTML = tx_2;
+      document.getElementById("trans_hash3").innerHTML = tx_3;
+    });
+    socket.on('energy', function(data) {
+      kWh = data.energy;
+      Etokens = data.tok;
+      ether_balance = data.bal;
+    })
+
+    function basic_tx() {
+      var to_address = document.getElementById("To_address").value;
+      var value = document.getElementById("Value").value;
+      socket.emit('basic_tx', {
+        add: to_address,
+        val: value
+      });
+    }
+  </script>
+</body>
+
+</html>

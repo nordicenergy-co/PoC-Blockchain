@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>CoE-Blockchain</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="./after.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/node_modules/web3/dist/web3.min.js"></script>
+  <style> body
+  {
+      font: 20px Montserrat, sans-serif;
+      line-height: 1.8;
+      color: #e0e1e2;
+  }
+
+  .margin {margin-bottom: 20px;}
+  .bg-1
+  {
+      font-size: 40px;
+      background-color: rgba(213, 216, 219, 0.13); /* Grey */
+      background-image:url('images/energies.png');
+      background-size: 100% 100%;
+      color: #ffffff;
+  }
+  .bg-2
+  {
+      font-size: 20px;
+      background-color: #2b2b2b; /* Dark Blue */
+      color: #ffffff;
+  }
+  .bg-3
+  {
+      background-color: #ffffff; /* White */
+      color: #ababab;
+  }
+  .bg-4
+  {
+      background-color: #2f2f2f; /* Black Gray */
+      color: #fff;
+  }
+  .container-fluid
+  {
+      padding-top: 70px;
+      padding-bottom: 70px;
+  }
+  .navbar
+  {
+      padding-top: 15px;
+      padding-bottom: 15px;
+      border: 0;
+      border-radius: 0;
+      margin-bottom: 0;
+      font-size: 20px;
+      letter-spacing: 5px;
+      background-color: #1c1c1c;
+  }
+  .navbar-nav  li a:hover
+  {
+      color: #1c1c1c !important;
+  }
+  .mybutton
+  {
+      background-color: #cd9e59; /* Orange */
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 26px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="home.html">Home</a></li>
+          <li><a href="#">Platform</a></li>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown">Login <b class="caret"></b></a>
+              <ul class="dropdown-menu" style="padding: 15px;min-width: 350px;">
+                <li>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <form class="form" role="form" method="get" action="enter_wallet" accept-charset="UTF-8" id="login-nav">
+                        <div class="form-group">
+                          <label class="sr-only" for="exampleInputEmail2">Account address</label>
+                          <input type="text" class="form-control" id="userInput" placeholder="Account address" required="">
+                        </div>
+                        <div class="form-group">
+                          <label class="sr-only" for="exampleInputPassword2">Password</label>
+                          <input type="password" class="form-control" id="pwd" placeholder="Password" required="">
+                        </div>
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-success btn-block" onclick="submit1();">Submit</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- First Container -->
+  <div class="container-fluid bg-1 text-center" style="height: 800px;">
+    <br>
+    <img src="public/images/coin.png" class="img-responsive img-circle margin" style="display:inline" width="300" height="300">
+    <br>
+    <h>Nordic Energy</h>
+    <p class="">The Proof-of-Concept for Energy Trading in DC Microgrids using Blockchain Technology.</p>
+    <br>
+    <button type="button" class="mybutton">Join Us</button>
+  </div>
+  <!-- Second Container -->
+  <div class="container-fluid bg-2 text-center">
+    <h1>About</h1>
+    <p> Nordic Energy´s PowerChain the trading of electricity platform, that helps energy retail customers to trade energy and value currency on a peer-to-peer basis. PoE platform facilitates the trading of electric energy between entities having surplus energy and entities deficit of energy using Ethereum's Blockchain Platform</p>
+  </div>
+  <!-- Third Container (Grid) -->
+  <div class="container-fluid bg-3 text-center">
+    <h1>Features</h1>
+    <div class="row">
+      <div class="col-sm-4">
+        <p>Direct access</p>
+        <img src="birds1.jpg" class="img-responsive margin" style="width:100%" alt="Image">
+      </div>
+      <div class="col-sm-4">
+        <p>Blockchain enabled</p>
+        <img src="birds2.jpg" class="img-responsive margin" style="width:100%" alt="Image">
+      </div>
+      <div class="col-sm-4">
+        <p>Ecosystem</p>
+        <img src="birds3.jpg" class="img-responsive margin" style="width:100%" alt="Image">
+      </div>
+    </div>
+  </div>
+  <script>
+    var socket = io();
+
+    function submit1() {
+      console.log("ghusa");
+      var input = document.getElementById("pwd").value;
+      socket.emit('password1', input);
+    }
+    socket.on('true', function(data) {
+      document.getElementById("status").innerHTML = data;
+    });
+  </script>
+  <a href="enter_wallet"> <br><br>
+    <p id="status"></p><br>
+  </a>
+</body>
+
+</html>
